@@ -1,24 +1,17 @@
 package com.cyberasap.cryptobank.controller;
 
-import com.cyberasap.cryptobank.domain.user.LoginRequest;
-import com.cyberasap.cryptobank.domain.user.LoginResponse;
-import com.cyberasap.cryptobank.domain.user.RegisterRequest;
-import com.cyberasap.cryptobank.domain.user.User;
+import com.cyberasap.cryptobank.domain.user.*;
 import com.cyberasap.cryptobank.jwt.JwtTokenUtil;
 import com.cyberasap.cryptobank.service.IUserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Optional;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -75,4 +68,24 @@ public class UserController {
         }
     }
 
+    @GetMapping("/get")
+    public ResponseEntity<?> getUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        try {
+            String email = JwtTokenUtil.getEmailFromAuthorizationHeader(authHeader);
+            if (email == null) {
+                throw new Exception("Bad credentials");
+            }
+
+            UserDetails userDetails = userService.getByEmail(email);
+
+            return ResponseEntity.ok().body(userDetails);
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new Object() {
+                        public String getMessage() {
+                            return exception.getMessage();
+                        }
+                    });
+        }
+    }
 }

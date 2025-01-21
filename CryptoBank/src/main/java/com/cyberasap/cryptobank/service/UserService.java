@@ -9,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -47,5 +49,22 @@ public class UserService implements IUserService {
     @Override
     public boolean existsByEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public com.cyberasap.cryptobank.domain.user.UserDetails getByEmail(String email) {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User with email " + email + " not found");
+        }
+
+        User user = optionalUser.get();
+
+        return com.cyberasap.cryptobank.domain.user.UserDetails.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .phoneNumber(user.getPhoneNumber())
+                .address(user.getAddress())
+                .build();
     }
 }
