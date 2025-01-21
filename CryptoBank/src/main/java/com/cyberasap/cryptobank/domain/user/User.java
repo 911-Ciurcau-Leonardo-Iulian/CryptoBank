@@ -1,5 +1,7 @@
 package com.cyberasap.cryptobank.domain.user;
 
+import com.cyberasap.cryptobank.domain.bankaccount.BankAccount;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.List;
+
 
 @Entity
 @Data
@@ -40,6 +43,10 @@ public class User implements UserDetails {
 
     @Column(nullable = false)
     private String address;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<BankAccount> bankAccounts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

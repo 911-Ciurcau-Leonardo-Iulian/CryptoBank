@@ -28,7 +28,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest request) {
         try {
-            System.out.println(JwtTokenUtil.SECRET_KEY);
             userService.register(request);
             return ResponseEntity.ok().build();
         } catch (Exception exception) {
