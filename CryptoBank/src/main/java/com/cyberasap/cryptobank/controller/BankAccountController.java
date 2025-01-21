@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/bank-account")
@@ -93,6 +92,28 @@ public class BankAccountController {
                             .amount(bankAccount.getAmount())
                             .build())
                     .toList();
+
+            return ResponseEntity.ok().body(response);
+        } catch (Exception exception) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new Object() {
+                        public String getMessage() {
+                            return exception.getMessage();
+                        }
+                    });
+        }
+    }
+
+    @GetMapping("/keys/{iban}")
+    public ResponseEntity<?> generateBankAccountKeys(@PathVariable("iban") String iban,
+                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
+        try {
+            String email = JwtTokenUtil.getEmailFromAuthorizationHeader(authHeader);
+            if (email == null) {
+                throw new Exception("Bad credentials");
+            }
+
+            String response = bankAccountService.generateBankAccountKeys(email, iban);
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {

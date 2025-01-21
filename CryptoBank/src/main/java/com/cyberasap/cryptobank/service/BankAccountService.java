@@ -78,4 +78,19 @@ public class BankAccountService implements IBankAccountService {
 
         return bankAccountRepository.findAllByUser_Id(user.getId());
     }
+
+    @Override
+    public String generateBankAccountKeys(String userEmail, String iban) throws NoSuchAlgorithmException {
+        BankAccount bankAccount = getBankAccount(userEmail, iban);
+
+        KeyPair keyPair = RSAUtil.generateKeyPair();
+        String publicKeyString = RSAUtil.keyToString(keyPair.getPublic());
+        String privateKeyString = RSAUtil.keyToString(keyPair.getPrivate());
+
+        bankAccount.setPublicKey(publicKeyString);
+
+        bankAccountRepository.save(bankAccount);
+
+        return privateKeyString;
+    }
 }
