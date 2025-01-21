@@ -43,4 +43,9 @@ public class UserService implements IUserService {
 
         return userRepository.save(newUser);
     }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
 }

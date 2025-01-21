@@ -33,6 +33,7 @@ public class SecurityConfiguration {
                 .userDetailsService(userService)
                 .authorizeHttpRequests((auth) ->
                     auth.requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil),
                         UsernamePasswordAuthenticationFilter.class)
