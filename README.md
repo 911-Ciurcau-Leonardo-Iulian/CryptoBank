@@ -1,7 +1,9 @@
 # CryptoBank
 The project uses Java 23. The server runs by default on port 8080.
+It can be ran using IntelliJ IDEA or by installing maven and running on the same level with **pom.xml**
+   > mvn spring-boot:run
 
-Steps to run the database (for any problems or changes also check *resources->application.properties*):
+A database also needs to be running. Steps to run the database (for any problems or changes also check *resources->application.properties*):
 1. Install MariaDB and make sure it is running
 2. Create a new database named **cryptobank**:
     > CREATE DATABASE cryptobank;
