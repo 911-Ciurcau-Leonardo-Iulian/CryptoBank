@@ -4,7 +4,7 @@ import com.cyberasap.cryptobank.config.SecurityConfiguration;
 import com.cyberasap.cryptobank.domain.user.RegisterRequest;
 import com.cyberasap.cryptobank.domain.user.User;
 import com.cyberasap.cryptobank.repository.IUserRepository;
-import com.cyberasap.cryptobank.util.RSAUtil;
+import com.cyberasap.cryptobank.util.CryptoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -80,9 +80,9 @@ public class UserService implements IUserService {
 
         User user = optionalUser.get();
 
-        KeyPair keyPair = RSAUtil.generateKeyPair();
-        String publicKeyString = RSAUtil.keyToString(keyPair.getPublic());
-        String privateKeyString = RSAUtil.keyToString(keyPair.getPrivate());
+        KeyPair keyPair = CryptoUtil.generateKeyPair();
+        String publicKeyString = CryptoUtil.keyToString(keyPair.getPublic());
+        String privateKeyString = CryptoUtil.keyToString(keyPair.getPrivate());
 
         user.setPublicKey(publicKeyString);
         userRepository.save(user);
