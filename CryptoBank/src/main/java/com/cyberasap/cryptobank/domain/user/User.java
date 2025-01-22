@@ -44,6 +44,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String address;
 
+    @Lob
+    @Column(length = 392)
+    private String publicKey;
+
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference
     private List<BankAccount> bankAccounts;

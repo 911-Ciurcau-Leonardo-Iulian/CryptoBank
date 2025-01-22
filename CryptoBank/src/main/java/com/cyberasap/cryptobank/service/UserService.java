@@ -4,11 +4,14 @@ import com.cyberasap.cryptobank.config.SecurityConfiguration;
 import com.cyberasap.cryptobank.domain.user.RegisterRequest;
 import com.cyberasap.cryptobank.domain.user.User;
 import com.cyberasap.cryptobank.repository.IUserRepository;
+import com.cyberasap.cryptobank.util.RSAUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
@@ -23,7 +26,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User register(RegisterRequest request) {
+    public void register(RegisterRequest request) {
         if (!request.getPassword().equals(request.getConfirmedPassword())) {
             throw new RuntimeException("Password does not match confirmed password");
         }
@@ -43,7 +46,7 @@ public class UserService implements IUserService {
                 .address(request.getAddress())
                 .build();
 
-        return userRepository.save(newUser);
+        userRepository.save(newUser);
     }
 
     @Override
@@ -66,5 +69,24 @@ public class UserService implements IUserService {
                 .phoneNumber(user.getPhoneNumber())
                 .address(user.getAddress())
                 .build();
+    }
+
+    @Override
+    public String generateUserKeys(String email) throws NoSuchAlgorithmException {
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User with email " + email + " not found");
+        }
+
+        User user = optionalUser.get();
+
+        KeyPair keyPair = RSAUtil.generateKeyPair();
+        String publicKeyString = RSAUtil.keyToString(keyPair.getPublic());
+        String privateKeyString = RSAUtil.keyToString(keyPair.getPrivate());
+
+        user.setPublicKey(publicKeyString);
+        userRepository.save(user);
+
+        return privateKeyString;
     }
 }

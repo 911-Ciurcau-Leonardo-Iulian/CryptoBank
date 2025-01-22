@@ -35,6 +35,9 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.POST, "/api/user/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/user/login").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/user/get").hasAuthority("REGULAR")
+                        .requestMatchers(HttpMethod.GET, "/api/bank-account/create").hasAuthority("REGULAR")
+                        .requestMatchers(HttpMethod.GET, "/api/bank-account/get").hasAuthority("REGULAR")
+                        .requestMatchers(HttpMethod.GET, "/api/bank-account/list").hasAuthority("REGULAR")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil),
                         UsernamePasswordAuthenticationFilter.class)

@@ -11,6 +11,4 @@ import lombok.NoArgsConstructor;
 @Builder
 public class BankAccountCreationResponse {
     private String iban;
-
-    private String privateKey;
 }

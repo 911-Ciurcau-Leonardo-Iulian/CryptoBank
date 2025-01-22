@@ -30,14 +30,8 @@ public class BankAccountController {
                 throw new Exception("Bad credentials");
             }
 
-            Pair<BankAccount, String> result = bankAccountService.create(email);
-            BankAccount bankAccount = result.getFirst();
-            String privateKey = result.getSecond();
-
-            BankAccountCreationResponse response = BankAccountCreationResponse.builder()
-                    .iban(bankAccount.getIban())
-                    .privateKey(privateKey)
-                    .build();
+            BankAccount bankAccount = bankAccountService.create(email);
+            BankAccountCreationResponse response = new BankAccountCreationResponse(bankAccount.getIban());
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {
@@ -92,28 +86,6 @@ public class BankAccountController {
                             .amount(bankAccount.getAmount())
                             .build())
                     .toList();
-
-            return ResponseEntity.ok().body(response);
-        } catch (Exception exception) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new Object() {
-                        public String getMessage() {
-                            return exception.getMessage();
-                        }
-                    });
-        }
-    }
-
-    @GetMapping("/keys/{iban}")
-    public ResponseEntity<?> generateBankAccountKeys(@PathVariable("iban") String iban,
-                                            @RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
-        try {
-            String email = JwtTokenUtil.getEmailFromAuthorizationHeader(authHeader);
-            if (email == null) {
-                throw new Exception("Bad credentials");
-            }
-
-            String response = bankAccountService.generateBankAccountKeys(email, iban);
 
             return ResponseEntity.ok().body(response);
         } catch (Exception exception) {

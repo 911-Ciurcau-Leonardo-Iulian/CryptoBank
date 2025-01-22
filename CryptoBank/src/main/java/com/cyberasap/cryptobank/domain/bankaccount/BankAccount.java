@@ -1,6 +1,8 @@
 package com.cyberasap.cryptobank.domain.bankaccount;
 
+import com.cyberasap.cryptobank.domain.transfer.Transfer;
 import com.cyberasap.cryptobank.domain.user.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,6 +10,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
 
 @Entity
 @Data
@@ -30,12 +34,16 @@ public class BankAccount {
     @Column(nullable = false)
     private Integer amount;
 
-    @Lob
-    @Column(nullable = false, length = 392)
-    private String publicKey;
-
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name="user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    @OneToMany(mappedBy = "senderBankAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Transfer> senderTransfers;
+
+    @OneToMany(mappedBy = "receiverBankAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Transfer> receiverTransfers;
 }
