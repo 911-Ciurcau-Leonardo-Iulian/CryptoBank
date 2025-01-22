@@ -1,5 +1,5 @@
 # CryptoBank
-The project uses Java 23.
+The project uses Java 23. The server runs by default on port 8080.
 
 Steps to run the database (for any problems or changes also check *resources->application.properties*):
 1. Install MariaDB and make sure it is running

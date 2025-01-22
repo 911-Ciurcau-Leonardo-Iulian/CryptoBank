@@ -8,12 +8,12 @@ import com.cyberasap.cryptobank.repository.IBankAccountRepository;
 import com.cyberasap.cryptobank.repository.ITransferRepository;
 import com.cyberasap.cryptobank.repository.IUserRepository;
 import com.cyberasap.cryptobank.util.CryptoUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -109,6 +109,18 @@ public class TransferService implements ITransferService {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    @Override
+    public List<Transfer> getAllTransfers(String userEmail) {
+        Optional<User> optionalUser = userRepository.findByEmail(userEmail);
+        if (optionalUser.isEmpty()) {
+            throw new RuntimeException("User with email " + userEmail + " not found");
+        }
+
+        User user = optionalUser.get();
+
+        return transferRepository.findAllBySenderBankAccount_User_Id(user.getId());
     }
 
     private String hashTransferRequest(TransferRequest transferRequest) throws Exception {
