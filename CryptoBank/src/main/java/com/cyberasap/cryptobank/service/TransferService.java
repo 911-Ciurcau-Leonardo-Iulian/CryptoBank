@@ -1,5 +1,7 @@
 package com.cyberasap.cryptobank.service;
 
+import com.cyberasap.cryptobank.domain.bankaccount.BankAccount;
+import com.cyberasap.cryptobank.domain.transfer.Transfer;
 import com.cyberasap.cryptobank.domain.transfer.TransferRequest;
 import com.cyberasap.cryptobank.domain.user.User;
 import com.cyberasap.cryptobank.repository.IBankAccountRepository;
@@ -34,16 +36,76 @@ public class TransferService implements ITransferService {
         }
 
         User user = optionalUser.get();
-        String publicKey = user.getPublicKey();
 
         try {
             String transferRequestHash = hashTransferRequest(transferRequest);
 
+            String publicKey = user.getPublicKey();
             String senderHash = CryptoUtil.decryptMessage(signature, publicKey);
 
             if (!senderHash.equals(transferRequestHash)) {
-                throw new RuntimeException("Invalid signature");
+                throw new RuntimeException("Invalid digital signature");
             }
+
+            String senderIban = transferRequest.getSenderIban();
+            String receiverIban = transferRequest.getReceiverIban();
+
+            if (senderIban.equals(receiverIban)) {
+                throw new RuntimeException("Sender and receiver account cannot be the same");
+            }
+
+            Optional<BankAccount> optionalSenderBankAccount = bankAccountRepository.findByIban(senderIban);
+            if (optionalSenderBankAccount.isEmpty()) {
+                throw new RuntimeException("Bank account with iban " + senderIban + " not found");
+            }
+
+            BankAccount senderBankAccount = optionalSenderBankAccount.get();
+            if (!senderBankAccount.getUser().getEmail().equals(userEmail)) {
+                throw new RuntimeException("Bank account with iban " + senderIban + "does not belong to user");
+            }
+
+            Integer transferAmount = transferRequest.getAmount();
+
+            if (transferAmount < 1) {
+                throw new RuntimeException("Transfer amount cannot be less than 1");
+            }
+
+            Integer senderAccountAmount = senderBankAccount.getAmount();
+
+            if (senderAccountAmount <= 0) {
+                throw new RuntimeException("Sender account amount is not positive");
+            }
+
+            if (transferAmount > senderBankAccount.getAmount()) {
+                throw new RuntimeException("Transfer amount is greater than sender bank account");
+            }
+
+            Optional<BankAccount> optionalReceiverBankAccount = bankAccountRepository.findByIban(receiverIban);
+            if (optionalReceiverBankAccount.isEmpty()) {
+                throw new RuntimeException("Bank account with iban " + receiverIban + " not found");
+            }
+
+            BankAccount receiverBankAccount = optionalReceiverBankAccount.get();
+
+            Transfer transfer = Transfer.builder()
+                    .amount(transferAmount)
+                    .isApproved(false)
+                    .senderBankAccount(senderBankAccount)
+                    .receiverBankAccount(receiverBankAccount)
+                    .timestamp(System.currentTimeMillis())
+                    .build();
+
+            transferRepository.save(transfer);
+
+            senderBankAccount.setAmount(senderAccountAmount - transferAmount);
+            receiverBankAccount.setAmount(receiverBankAccount.getAmount() + transferAmount);
+
+            bankAccountRepository.save(senderBankAccount);
+            bankAccountRepository.save(receiverBankAccount);
+
+            transfer.setIsApproved(true);
+
+            transferRepository.save(transfer);
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
