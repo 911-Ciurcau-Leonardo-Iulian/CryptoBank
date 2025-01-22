@@ -1,6 +1,8 @@
 package com.cyberasap.cryptobank.controller;
 
+import com.cyberasap.cryptobank.domain.transfer.TransferRequestSigned;
 import com.cyberasap.cryptobank.service.ITransferService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,9 +17,9 @@ public class TransferController {
 
     @PostMapping("/transfer-amount")
     public ResponseEntity<?> transferAmount(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader,
-                                            @RequestBody String signedTransferRequest) {
+                                            @RequestBody @Valid TransferRequestSigned transferRequestSigned) {
         try {
-            return ResponseEntity.ok().body(signedTransferRequest);
+            return ResponseEntity.ok().build();
         } catch (Exception exception) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Object() {
                 public String getMessage() {

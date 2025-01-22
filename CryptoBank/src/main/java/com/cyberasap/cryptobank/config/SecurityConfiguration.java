@@ -38,6 +38,7 @@ public class SecurityConfiguration {
                         .requestMatchers(HttpMethod.GET, "/api/bank-account/create").hasAuthority("REGULAR")
                         .requestMatchers(HttpMethod.GET, "/api/bank-account/get").hasAuthority("REGULAR")
                         .requestMatchers(HttpMethod.GET, "/api/bank-account/list").hasAuthority("REGULAR")
+                        .requestMatchers(HttpMethod.GET, "/api/transfer/transfer-amount").hasAuthority("REGULAR")
                         .anyRequest().authenticated())
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenUtil),
                         UsernamePasswordAuthenticationFilter.class)
