@@ -1,8 +1,8 @@
 # React + TypeScript + Vite
-- node version: 18.20.0
+- node version: 20.17.0
 - to start the project run the following commands:
 ```cmd
-nvm use v18.20.0
+nvm use v20.17.0
 yarn install
 yarn start
 ```
