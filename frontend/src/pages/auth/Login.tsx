@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { login } from '../../client/auth';
 
-const Login: React.FC = () => {
+interface LoginProps {
+    setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try {
             await login(email, password);
-            alert('Login successful!');
+            setIsLoggedIn(true);
+            navigate('/account');
         } catch (error) {
             console.error(error);
             alert('Login failed.');

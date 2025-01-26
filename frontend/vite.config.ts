@@ -1,11 +1,11 @@
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import {nodePolyfills} from "vite-plugin-node-polyfills";
 
 export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    https: false,
     watch: {
       usePolling: false,
       useFsEvents: false
@@ -16,13 +16,13 @@ export default defineConfig({
   },
   plugins: [
     react(),
+    nodePolyfills(),
   ],
   build: {
     outDir: 'build'
   },
   preview: {
     port: 3002,
-    https: false,
     host: 'localhost',
   }
 });
