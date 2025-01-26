@@ -16,13 +16,13 @@ const App: React.FC = () => {
 
     return (
         <Router>
-            <nav>
-                {!isLoggedIn && <Link to="/login">Login</Link>}
-                {!isLoggedIn && <Link to="/register">Register</Link>}
-                {isLoggedIn && <Link to="/account">Accounts</Link>}
-                {isLoggedIn && <Link to="/transfer/new">New Transfer</Link>}
-                {isLoggedIn && <Link to="/transfer/list">Transfer History</Link>}
-                {isLoggedIn && <button onClick={handleLogout}>Logout</button>}
+            <nav className="absolute top-0  pt-2 flex flex-row w-screen justify-center items-center gap-10">
+                {!isLoggedIn && <Link className="rounded-3xl text-slate-50 hover:text-black hover:bg-gradient-to-b from-violet-100 to-violet-300 p-4" to="/login">Login</Link>}
+                {!isLoggedIn && <Link className="rounded-3xl text-slate-50 hover:text-black hover:bg-gradient-to-b from-violet-100 to-violet-300 p-4" to="/register">Register</Link>}
+                {isLoggedIn && <Link className="rounded-3xl text-slate-50 hover:text-black hover:bg-gradient-to-b from-violet-100 to-violet-300 p-4" to="/account">Accounts</Link>}
+                {isLoggedIn && <Link className="rounded-3xl text-slate-50 hover:text-black hover:bg-gradient-to-b from-violet-100 to-violet-300 p-4" to="/transfer/new">New Transfer</Link>}
+                {isLoggedIn && <Link className="rounded-3xl text-slate-50  hover:text-black hover:bg-gradient-to-b from-violet-100 to-violet-300 p-4" to="/transfer/list">Transfer History</Link>}
+                {isLoggedIn && <button className="rounded-3xl text-slate-50 hover:text-black hover:bg-gradient-to-b from-red-100 to-red-300 p-4" onClick={handleLogout}>Logout</button>}
             </nav>
             <Routes>
                 <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />

@@ -23,22 +23,21 @@ const Login: React.FC<LoginProps> = ({ setIsLoggedIn }) => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
-                <input
+        <div className="flex flex-col items-center justify-center h-full">
+            <form className="flex flex-col items-center justify-center h-full gap-6" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}>
+                <input className="p-4 bg-violet-300 text-black rounded-3xl"
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                 />
-                <input
+                <input className="p-4 bg-violet-300 text-black rounded-3xl"
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                 />
-                <button type="submit">Login</button>
+                <button className="hover:bg-gradient-to-b from-violet-50 to-violet-300 hover:text-black" type="submit">Login</button>
             </form>
         </div>
     );

@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import api from '../../client/api';
-import {sha256} from 'crypto-hash';
+import { sha256 } from 'crypto-hash';
 import EncryptRSA from 'encrypt-rsa';
 
 interface BankAccount {
@@ -74,7 +74,10 @@ const NewTransfer: React.FC = () => {
     const signWithPrivateKey = (hash: string, privateKey: string): string => {
         try {
             // Correctly use `sign` to sign the hash with the private key
-            return encryptRsa.encrypt({text: hash, privateKey: '-----BEGIN PRIVATE KEY-----\n'+privateKey+'\n-----END PRIVATE KEY-----'});
+            return encryptRsa.encrypt({
+                text: hash,
+                privateKey: '-----BEGIN PRIVATE KEY-----\n' + privateKey + '\n-----END PRIVATE KEY-----',
+            });
         } catch (error) {
             console.error('Error generating RSA signature:', error);
             throw new Error('Failed to generate the RSA signature.');
@@ -82,20 +85,25 @@ const NewTransfer: React.FC = () => {
     };
 
     return (
-        <div>
-            <h2>New Transfer</h2>
+        <div className="flex flex-col items-center justify-center p-6 bg-violet-400 rounded-lg mt-10">
+            <h2 className="text-3xl font-semibold text-gray-800 mb-6">New Transfer</h2>
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
                     handleTransfer();
                 }}
+                className=""
             >
                 {/* Sender IBAN Dropdown */}
                 <div>
-                    <label>Sender IBAN:</label>
-                    <select value={senderIban} onChange={(e) => setSenderIban(e.target.value)}>
+                    <label className="text-lg font-medium text-gray-700">Sender IBAN:</label>
+                    <select
+                        value={senderIban}
+                        onChange={(e) => setSenderIban(e.target.value)}
+                        className="w-full p-3 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    >
                         {accounts.map((account) => (
-                            <option key={account.iban} value={account.iban}>
+                            <option className="text-black" key={account.iban} value={account.iban}>
                                 {account.iban} (Balance: ${account.amount})
                             </option>
                         ))}
@@ -104,27 +112,37 @@ const NewTransfer: React.FC = () => {
 
                 {/* Receiver IBAN Input */}
                 <div>
-                    <label>Receiver IBAN:</label>
+                    <label className="text-lg font-medium text-gray-700">Receiver IBAN:</label>
                     <input
                         type="text"
                         placeholder="Receiver IBAN"
                         value={receiverIban}
                         onChange={(e) => setReceiverIban(e.target.value)}
+                        className="w-full p-3 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                 </div>
 
                 {/* Amount Input */}
                 <div>
-                    <label>Amount:</label>
+                    <label className="text-lg font-medium text-gray-700">Amount:</label>
                     <input
                         type="number"
                         placeholder="Amount"
                         value={amount}
                         onChange={(e) => setAmount(Number(e.target.value))}
+                        className="w-full p-3 mt-2 border rounded-lg border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                 </div>
 
-                <button type="submit">Transfer</button>
+                {/* Transfer Button */}
+                <div>
+                    <button
+                        type="submit"
+                        className="w-full py-3 mt-4 bg-gradient-to-b from-green-500 to-green-300 text-white font-semibold rounded-lg shadow-md hover:bg-green-400 transition duration-200"
+                    >
+                        Transfer
+                    </button>
+                </div>
             </form>
         </div>
     );

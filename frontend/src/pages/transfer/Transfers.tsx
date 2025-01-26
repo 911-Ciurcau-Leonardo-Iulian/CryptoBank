@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import api from '../../client/api';
 
 const Transfers: React.FC = () => {
@@ -18,15 +18,17 @@ const Transfers: React.FC = () => {
     }, []);
 
     return (
-        <div>
-            <h2>Transfer History</h2>
+        <div className="flex flex-col items-center w-screen rounded-lg">
+            <h2 className=" absolute top-0 pt-20 text-xl font-extrabold">Transfer History</h2>
             {transfers.length === 0 ? (
                 <p>No transfers found.</p>
             ) : (
-                <ul>
+                <ul className="gap-6 flex flex-col justify-center w-1/2">
                     {transfers.map((transfer, index) => (
-                        <li key={index}>
-                            {transfer.senderIban} → {transfer.receiverIban}: ${transfer.amount}
+                        <li key={index} className="rounded-3xl bg-violet-400 p-12 flex flex-col justify-center items-center">
+                            <span>{new Date(transfer.time).toLocaleString()}</span>
+                            <span className="text-black ">Receiver: {transfer.receiverIban}</span>
+                            <span>Sent ${transfer.amount}</span>
                         </li>
                     ))}
                 </ul>

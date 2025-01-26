@@ -23,11 +23,10 @@ const Register: React.FC = () => {
     };
 
     return (
-        <div>
-            <h2>Register</h2>
-            <form onSubmit={(e) => { e.preventDefault(); handleRegister(); }}>
+        <div className="mt-20 flex flex-col items-center justify-center h-full" >
+            <form className="grid grid-cols-2 items-center justify-center h-full gap-6" onSubmit={(e) => { e.preventDefault(); handleRegister(); }}>
                 {Object.keys(formData).map((key) => (
-                    <input
+                    <input className="p-4 bg-violet-300 text-black rounded-3xl"
                         key={key}
                         type="text"
                         placeholder={key}
@@ -35,7 +34,7 @@ const Register: React.FC = () => {
                         onChange={(e) => setFormData({ ...formData, [key]: e.target.value })}
                     />
                 ))}
-                <button type="submit">Register</button>
+                <button  className="hover:bg-gradient-to-b from-violet-50 to-violet-300 hover:text-black" type="submit">Register</button>
             </form>
         </div>
     );
