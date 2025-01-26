@@ -11,10 +11,14 @@
     "start": "vite dev"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@tailwindcss/vite": "^4.0.0",
     "axios": "^1.7.9",
     "crypto-hash": "^3.1.0",
     "encrypt-rsa": "^3.3.0",
+    "font-awesome": "^4.7.0",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
