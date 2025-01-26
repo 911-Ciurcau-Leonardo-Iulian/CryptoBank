@@ -24,7 +24,7 @@ const Transfers: React.FC = () => {
                 <p>No transfers found.</p>
             ) : (
                 <ul className="gap-6 flex flex-col justify-center w-1/2 mt-20 pt-20">
-                    {transfers.map((transfer, index) => (
+                    {transfers.sort(a=>a.time).map((transfer, index) => (
                         <li key={index} className="rounded-3xl bg-violet-400 p-12 flex flex-col justify-center items-center">
                             <span>{new Date(transfer.time).toLocaleString()}</span>
                             <span className="text-black ">Receiver: {transfer.receiverIban}</span>

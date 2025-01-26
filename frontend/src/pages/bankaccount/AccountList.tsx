@@ -53,7 +53,7 @@ const AccountList: React.FC = () => {
                 <p>No accounts found.</p>
             ) : (
                 <ul className="gap-6 flex flex-col justify-center items-center">
-                    {accounts.map((account) => (
+                    {accounts.sort(a=>a.creationTime).map((account) => (
                         <li  className="rounded-3xl bg-violet-400 p-12 flex flex-col justify-center items-center" key={account.iban}>
                             <p>IBAN: {account.iban}</p>
                             <p>Balance: ${account.amount}</p>
